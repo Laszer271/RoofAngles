@@ -28,7 +28,7 @@ def get_images_paths(input_path):
         
         for item in items:
             extension = item[-4:]
-            if extension != '.jpg':
+            if extension not in ['.jpg', '.JPG', '.png']:
                 # we assume that item is actually a directory
                 new_items = os.listdir(item)
                 for new_item in new_items:
@@ -68,7 +68,7 @@ def get_dataset(photo_paths, file, sheet_name=None):
     return dataset
 
 if __name__ == '__main__':
-    path = './photos'
+    path = './photos/streetview'
     file = 'Prich jobs stats.xlsx'
     sheet_name = 'code-address-roofPitch'
     dataset = get_dataset(path, file, sheet_name)
