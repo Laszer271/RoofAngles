@@ -93,7 +93,7 @@ def build_model(width, height, channels):
      return model, encoder
 
 # getting dataset:
-dataset = utils.get_dataset('./photos', 'Prich jobs stats.xlsx',
+dataset = utils.get_dataset('./photos/streetview', 'Prich jobs stats.xlsx',
                             sheet_name='code-address-roofPitch')
 y = dataset['front roof angle'].values
 X = []
@@ -121,8 +121,8 @@ y_test -= y_mean
 EPOCHS = 25
 model, encoder = build_model(X[0].shape[1], X[0].shape[0], X[0].shape[2])
 model.compile(loss="mae", optimizer='adam')
-h = model.fit_generator(generator.flow(X_train, y_train, batch_size=32),
-                        epochs=EPOCHS, validation_data=(X_test, y_test))
+h = model.fit(generator.flow(X_train, y_train, batch_size=32),
+              epochs=EPOCHS, validation_data=(X_test, y_test))
 
 # evaluating:
 preds = model.predict(X_test).flatten()
@@ -152,29 +152,6 @@ plt.ylabel("Loss")
 plt.legend(loc="upper right")
 plt.savefig('training_plot.png')
 
-'''
-# predicting with augmentation:
-del X
-del y
-del h
-del dataset
-n_augmentations = 10 * 2
-predictions = np.full((len(y_test), n_augmentations), 0.0)
-for row, arr in enumerate(X_test):
-    print(row)
-    arr = np.reshape(arr, (1, arr.shape[0], arr.shape[1], arr.shape[2]))
-    arr_flipped = arr[:, :, ::-1, :]
-    for c in range(n_augmentations // 2):
-        col = 2 * c
-        predictions[row, col] = model.predict(random_brightness(arr))
-        predictions[row, col + 1] = model.predict(random_brightness(arr_flipped))
-preds = predictions.mean(axis=1)
-mae = np.abs(preds - y_test).mean()
-mse = np.square(preds - y_test).mean()
-print('after augmenting test data:')
-print("MSE: %.4f" % mse)
-print("MAE: %.4f" % mae)
-'''
 # tree:
 params = {'n_estimators': 300, 'max_depth': 20, 'min_samples_split': 20,
       'learning_rate': 0.01, 'loss': 'ls', 'criterion': 'mae'}

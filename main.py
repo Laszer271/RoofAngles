@@ -21,7 +21,7 @@ X = df.values
 y = y1.values
 X, y = shuffle(X, y)
 
-params = {'n_estimators': 50000, 'max_depth': 20, 'min_samples_split': 10,
+params = {'n_estimators': 5000, 'max_depth': 20, 'min_samples_split': 10,
           'learning_rate': 0.01, 'loss': 'ls'}
 clf = ensemble.GradientBoostingRegressor(**params)
 offset = int(X.shape[0] * 0.9)

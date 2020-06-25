@@ -63,6 +63,7 @@ def get_dataset(photo_paths, file, sheet_name=None):
     dataset2 = dataset2.join(df.set_index('forGoogleMapAlt'), on='Paths')
     dataset = dataset1.combine_first(dataset2)
     dataset = dataset[['Paths', 'front roof angle']]
+    print(dataset[dataset['front roof angle'].isna()])
     dataset = dataset[~dataset['front roof angle'].isna()]
     
     return dataset
